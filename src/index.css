@@ -9,7 +9,6 @@
 }
 
 :root {
-  /* Dark theme colors */
   --color-text-primary: #EDF3FF;
   --color-text-secondary: #D7E5FF;
   --color-text-placeholder: #A0B1CF;
@@ -26,7 +25,6 @@
 }
 
 .app-container.light-theme {
-  /* Light theme colors */
   --color-text-primary: #2A2A2A;
   --color-text-secondary: #4A5565;
   --color-text-placeholder: #7F93B7;
@@ -39,17 +37,24 @@
   --color-icon: #64748B;
 }
 
+/* ============================================================
+   BASE LAYOUT
+   ============================================================ */
 .app-container {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
+  overflow: hidden;
   color: var(--color-text-primary);
   background: var(--color-bg-primary);
 }
 
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
 .sidebar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 20;
   flex-shrink: 0;
   display: flex;
@@ -229,7 +234,10 @@
 }
 
 .sidebar .sidebar-footer {
-  padding: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   border-top: 1px solid var(--color-border-hr);
 }
 
@@ -244,12 +252,105 @@
   background: var(--color-hover-secondary-alt);
 }
 
+/* ============================================================
+   USER PROFILE BLOCK
+   ============================================================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: default;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.user-profile:hover {
+  background: var(--color-hover-secondary);
+}
+
+/* Gradient circle showing first letter of email */
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gradient-blue-purple);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+/* Text info block: name + email + sign out */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+  min-width: 0;
+  transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+/* Hide text when sidebar collapses — only avatar stays visible */
+.sidebar.closed .user-info {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 11px;
+  color: var(--color-text-placeholder);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sign out — minimal text link */
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  color: var(--color-text-placeholder);
+  cursor: pointer;
+  text-align: left;
+  width: fit-content;
+  transition: color 0.2s ease;
+}
+
+.logout-btn:hover {
+  color: #ef4444;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
 .main-container {
   display: flex;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding-top: 30px;
   flex-direction: column;
-  justify-content: space-between;
+  overflow: hidden;
 }
 
 .main-container :where(.message, .prompt-wrapper, .disclaimer-text) {
@@ -260,11 +361,15 @@
   max-width: 1000px;
 }
 
+/* ============================================================
+   MESSAGES
+   ============================================================ */
 .messages-container {
   display: flex;
   gap: 20px;
-  padding: 0 0 100px;
+  padding: 0 0 20px;
   overflow-y: auto;
+  flex: 1;
   flex-direction: column;
   scrollbar-color: var(--color-text-placeholder) transparent;
 }
@@ -292,9 +397,7 @@
 }
 
 @keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
+  100% { transform: rotate(360deg); }
 }
 
 .messages-container .message .text {
@@ -324,7 +427,9 @@
   color: #e11d48;
 }
 
-/* Message Actions */
+/* ============================================================
+   MESSAGE ACTIONS
+   ============================================================ */
 .message {
   position: relative;
   padding: 12px 60px 12px 12px;
@@ -368,7 +473,9 @@
   background: var(--color-hover-secondary);
 }
 
-/* Message Edit Styles */
+/* ============================================================
+   MESSAGE EDIT
+   ============================================================ */
 .message.editing {
   background: var(--color-bg-secondary);
   border: 1px solid #3b82f6;
@@ -409,47 +516,6 @@
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-}
-
-.edit-save-btn,
-.edit-cancel-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.edit-save-btn {
-  background: #3b82f6;
-  color: #fff;
-}
-
-.edit-save-btn:hover:not(:disabled) {
-  background: #2563eb;
-}
-
-.edit-save-btn:disabled {
-  background: var(--color-hover-secondary);
-  color: var(--color-text-placeholder);
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.edit-cancel-btn {
-  background: transparent;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border-hr);
-}
-
-.edit-cancel-btn:hover {
-  background: var(--color-hover-secondary);
-  color: var(--color-text-primary);
 }
 
 .message-edit-container {
@@ -525,14 +591,16 @@
   background: var(--color-hover-secondary-alt);
 }
 
-/* Welcome Screen */
+/* ============================================================
+   WELCOME SCREEN
+   ============================================================ */
 .welcome-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 60vh;
+  flex: 1;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
@@ -566,10 +634,13 @@
   color: var(--color-text-secondary);
 }
 
-/* Main Header */
+/* ============================================================
+   MAIN HEADER (mobile hamburger)
+   ============================================================ */
 .main-header {
   display: none;
   padding: 12px 20px;
+  flex-shrink: 0;
   background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-bg-secondary);
 }
@@ -588,7 +659,9 @@
   transition: 0.3s ease;
 }
 
-/* Overlay */
+/* ============================================================
+   OVERLAY
+   ============================================================ */
 .overlay {
   height: 100%;
   width: 100%;
@@ -602,11 +675,20 @@
   transition: 0.2s ease;
 }
 
-/* PERFECTLY ALIGNED PROMPT INPUT WITH MIC & SEND BUTTONS */
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================================
+   PROMPT INPUT
+   ============================================================ */
 .main-container .prompt-container {
   padding: 16px 20px;
+  flex-shrink: 0;
   width: 100%;
   background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-hr);
 }
 
 .prompt-wrapper {
@@ -622,18 +704,17 @@
   min-height: 54px;
   max-height: 200px;
   width: 100%;
-  position: relative;
   border-radius: 26px;
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-hr);
   display: flex;
   align-items: center;
   padding: 7px;
-  gap: 0;
 }
 
 .prompt-form .prompt-input {
   flex: 1;
+  min-width: 0;
   min-height: 40px;
   max-height: 186px;
   background: none;
@@ -689,7 +770,6 @@
   background: #dc2626;
 }
 
-/* Recording indicator dot */
 .prompt-form .mic-btn.listening::after {
   content: '';
   position: absolute;
@@ -708,14 +788,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% { 
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
 }
 
 .prompt-form .send-prompt-btn {
@@ -732,7 +806,6 @@
   cursor: not-allowed;
 }
 
-/* Active state when there's text */
 .prompt-form .prompt-input:not(:placeholder-shown) ~ .send-prompt-btn {
   background: #3b82f6;
   color: #fff;
@@ -743,126 +816,29 @@
 }
 
 .prompt-container .disclaimer-text {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
-  padding: 16px 20px 0;
+  padding: 10px 20px 0;
   color: var(--color-text-placeholder);
 }
 
-/* Bounce Animation */
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 .bounce-in {
   animation: bounceIn 0.6s ease;
 }
 
 @keyframes bounceIn {
-  0% {
-    transform: scale(0.2) translateY(12px);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.15) translateY(-6px);
-  }
-  75% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0% { transform: scale(0.2) translateY(12px); opacity: 0; }
+  50% { transform: scale(1.15) translateY(-6px); }
+  75% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .sidebar.closed {
-    width: var(--sidebar-open-width);
-  }
-  
-  .sidebar {
-    position: fixed;
-    height: 100%;
-    left: calc(-1 * var(--sidebar-open-width));
-    transition: left 0.3s ease;
-  }
-  
-  .sidebar.open {
-    left: 0;
-  }
-  
-  .main-container {
-    padding-top: 0;
-  }
-  
-  .main-header {
-    display: block;
-  }
-  
-  .overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  
-  .messages-container {
-    padding-top: 20px;
-    margin-bottom: auto;
-  }
-  
-  .welcome-logo {
-    height: 60px;
-    width: 60px;
-  }
-  
-  .welcome-heading {
-    font-size: 1.8rem;
-  }
-  
-  .welcome-text {
-    font-size: 1rem;
-  }
-  
-  .prompt-container {
-    padding: 12px 16px;
-  }
-}
-/* Logout button */
-.logout-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 10px 12px;
-  margin-top: 8px;
-
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-
-  color: var(--color-text-primary);
-  font-size: 14px;
-  font-weight: 500;
-
-  cursor: pointer;
-  transition: background 0.2s ease, border 0.2s ease;
-}
-
-/* Hover effect */
-.logout-btn:hover {
-  background: rgba(255, 0, 0, 0.08);
-  border-color: rgba(255, 0, 0, 0.4);
-  color: #ff6b6b;
-}
-
-/* Dark theme fine-tune */
-.dark .logout-btn {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Light theme fine-tune */
-.light .logout-btn {
-  border-color: rgba(0, 0, 0, 0.15);
-}
-
-
+/* ============================================================
+   AUTH PAGES
+   ============================================================ */
 .auth-container {
   width: 320px;
   margin: 50px auto;
@@ -875,6 +851,7 @@ input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 16px;
 }
 
 button {
@@ -891,19 +868,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.google-btn {
-  background: #db4437;
-}
-
-.error {
-  color: red;
-  font-size: 14px;
-}
-
-.info {
-  color: green;
-  font-size: 14px;
-}
+.google-btn { background: #db4437; }
+.error { color: red; font-size: 14px; }
+.info { color: green; font-size: 14px; }
 
 .link-btn {
   background: none;
@@ -911,4 +878,132 @@ button:disabled {
   border: none;
   cursor: pointer;
   padding: 0;
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (768px – 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .main-container :where(.message, .prompt-wrapper, .disclaimer-text) {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  .messages-container .user-message .text {
+    max-width: 85%;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (≤ 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    height: 100dvh;
+    left: calc(-1 * var(--sidebar-open-width));
+    transition: left 0.3s ease;
+    z-index: 20;
+  }
+
+  /* On mobile sidebar is always full width */
+  .sidebar.closed {
+    width: var(--sidebar-open-width);
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  /* On mobile, keep user-info visible (sidebar is always full-width) */
+  .sidebar.closed .user-info {
+    opacity: 1;
+    width: auto;
+    pointer-events: auto;
+  }
+
+  .main-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .main-container {
+    padding-top: 0;
+    width: 100%;
+  }
+
+  .messages-container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .messages-container .user-message .text {
+    max-width: 90%;
+  }
+
+  .messages-container .bot-message .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .welcome-logo { width: 60px; height: 60px; }
+  .welcome-heading { font-size: 1.6rem; }
+  .welcome-text { font-size: 0.95rem; }
+
+  .prompt-container { padding: 10px 12px; }
+
+  .prompt-form .prompt-row {
+    min-height: 48px;
+    padding: 5px;
+    border-radius: 22px;
+  }
+
+  .prompt-form .prompt-input {
+    font-size: 16px;
+    padding: 6px 12px;
+  }
+
+  .prompt-form .mic-btn,
+  .prompt-form .send-prompt-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .prompt-container .disclaimer-text {
+    font-size: 0.75rem;
+    padding: 8px 12px 0;
+  }
+
+  .actions {
+    opacity: 1;
+    position: static;
+    margin-top: 6px;
+    justify-content: flex-end;
+  }
+
+  .message-edit-container { max-width: 100%; }
+
+  .auth-container {
+    width: 90%;
+    margin: 30px auto;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — SMALL MOBILE (≤ 380px)
+   ============================================================ */
+@media (max-width: 380px) {
+  .welcome-heading { font-size: 1.3rem; }
+  .welcome-logo { width: 50px; height: 50px; }
+
+  .prompt-form .mic-btn,
+  .prompt-form .send-prompt-btn {
+    width: 32px;
+    height: 32px;
+    margin-left: 2px;
+  }
+
+  .prompt-form .prompt-input { padding: 6px 8px; }
+  .messages-container .user-message .text { max-width: 95%; }
 }

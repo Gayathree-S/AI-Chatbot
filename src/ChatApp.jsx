@@ -242,18 +242,19 @@ const ChatApp = ({ user }) => {
   return (
     <div className={`app-container ${theme === "light" ? "light-theme" : "dark-theme"}`}>
       <div className={`overlay ${isSidebarOpen ? "show" : "hide"}`} onClick={() => setIsSidebarOpen(false)} />
-      <Sidebar
-        conversations={conversations}
-        setConversations={setConversations}
-        activeConversation={activeConversation}
-        setActiveConversation={setActiveConversation}
-        theme={theme}
-        setTheme={setTheme}
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
-        userId={user.id}           // ✅ pass userId to Sidebar for new chat creation
-        onLogout={handleLogout}    // ✅ logout button in sidebar
-      />
+     <Sidebar
+  conversations={conversations}
+  setConversations={setConversations}
+  activeConversation={activeConversation}
+  setActiveConversation={setActiveConversation}
+  theme={theme}
+  setTheme={setTheme}
+  isSidebarOpen={isSidebarOpen}
+  setIsSidebarOpen={setIsSidebarOpen}
+  userId={user.id}
+  onLogout={handleLogout}
+  user={user}    
+     />
       <main className="main-container">
         <header className="main-header">
           <button onClick={() => setIsSidebarOpen(true)} className="sidebar-toggle">

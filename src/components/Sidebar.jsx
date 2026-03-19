@@ -1,4 +1,4 @@
-import { Menu, Moon, Plus, Sparkles, Sun, Trash2, LogOut } from "lucide-react";
+import { Menu, Moon, Plus, Sparkles, Sun, Trash2 } from "lucide-react";
 import { supabase } from "../supabase";
 
 const Sidebar = ({
@@ -9,36 +9,31 @@ const Sidebar = ({
   activeConversation,
   setActiveConversation,
   theme,
-  setTheme
+  setTheme,
+  user, // ✅ receive user prop
 }) => {
 
   // 🔐 Logout + cleanup
   const handleLogout = async () => {
     await supabase.auth.signOut();
-
-    // Clear user-specific data
     setConversations([]);
     setActiveConversation(null);
   };
 
   // ➕ Create new conversation
   const createNewConversation = () => {
-    // prevent multiple empty chats
     const emptyConversation = conversations.find(
       (conv) => conv.messages.length === 0
     );
-
     if (emptyConversation) {
       setActiveConversation(emptyConversation.id);
       return;
     }
-
     const newConversation = {
       id: `conv-${Date.now()}`,
       title: "New Chat",
-      messages: []
+      messages: [],
     };
-
     setConversations((prev) => [newConversation, ...prev]);
     setActiveConversation(newConversation.id);
   };
@@ -46,30 +41,30 @@ const Sidebar = ({
   // 🗑 Delete conversation
   const deleteConversation = (id, e) => {
     e.stopPropagation();
-
     const updated = conversations.filter((conv) => conv.id !== id);
-
     if (updated.length === 0) {
-      const fallback = {
-        id: "default",
-        title: "New Chat",
-        messages: []
-      };
+      const fallback = { id: "default", title: "New Chat", messages: [] };
       setConversations([fallback]);
       setActiveConversation(fallback.id);
       return;
     }
-
     setConversations(updated);
-
     if (activeConversation === id) {
       setActiveConversation(updated[0].id);
     }
   };
 
+  // 👤 Get avatar letter and display name from user
+  const avatarLetter = user?.email?.charAt(0).toUpperCase() ?? "?";
+  const displayEmail = user?.email ?? "";
+  const displayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    displayEmail.split("@")[0];
+
   return (
     <aside className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
-      
+
       {/* Header */}
       <div className="sidebar-header">
         <button
@@ -120,6 +115,8 @@ const Sidebar = ({
 
       {/* Footer */}
       <div className="sidebar-footer">
+
+        {/* Theme toggle */}
         <button
           className="theme-toggle"
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -137,10 +134,19 @@ const Sidebar = ({
           )}
         </button>
 
-        <button onClick={handleLogout} className="logout-btn">
-          <LogOut size={18} />
-          Logout
-        </button>
+        {/* User profile + logout */}
+        <div className="user-profile">
+          <div className="user-avatar">{avatarLetter}</div>
+
+          <div className="user-info">
+            <span className="user-name">{displayName}</span>
+            <span className="user-email">{displayEmail}</span>
+            <button className="logout-btn" onClick={handleLogout}>
+              Sign out
+            </button>
+          </div>
+        </div>
+
       </div>
     </aside>
   );
